@@ -31,5 +31,5 @@ catch {
 # Update user software
 flatpak update
 
-# Update Kernel LivePatch database and apply newest patches
+# Update Core LivePatch database and apply newest patches
 sudo clpctl update
