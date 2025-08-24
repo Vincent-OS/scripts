@@ -1,0 +1,11 @@
+[Unit]
+Description=Core LivePatch Update Service
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/clpctl Update
+User=root
+
+[Install]
+WantedBy=multi-user.target
