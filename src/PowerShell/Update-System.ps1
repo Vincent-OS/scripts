@@ -20,7 +20,7 @@ sudo pacman -Syu
 
 # Update AUR packages if yay is installed
 try {
-    if (Test-Path /usr/bin/yay -eq $true) {
+    if (Get-Command yay) {
         yay -Syu
     }
 }
