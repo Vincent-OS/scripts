@@ -26,6 +26,11 @@ param (
 $sdkDir = "/src/SDK"
 $repos = @(
     @{
+        Name = "calamares"
+        Url = "https://codeberg.org/Calamares/calamares.git"
+        Branch = if ($Development) { "calamares" } else { "calamares" }
+    }, 
+    @{
         Name = "calamares-settings"
         Url = "https://github.com/Vincent-OS/calamares-settings.git"
         Branch = if ($Development) { "dev" } else { "master" }
@@ -96,3 +101,8 @@ foreach ($repo in $repos) {
     Start-Sleep -Seconds 1
 }
 Write-Progress -Activity "Cloning repositories" -Status "Completed." -PercentComplete 100
+Write-Host "All repositories have been cloned or updated successfully."
+# NOTE: Maybe in the future, we can setup a VM to isolate and test the SDK environment.
+Write-Host "Vincent OS SDK environment setup is complete. Happy hacking!"
+Stop-Transcript
+exit 0
