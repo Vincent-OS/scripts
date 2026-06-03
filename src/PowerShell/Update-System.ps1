@@ -12,24 +12,33 @@
     .EXAMPLE
     Update-System.ps1
 #>
-
-Write-Host "Updating Vincent OS System..."
-
-# Update core system
-sudo pacman -Syu
-
-# Update AUR packages if yay is installed
+$currentID = & id -u 2>$null
 try {
-    if (Get-Command yay) {
-        yay -Syu
-    }
+	if ($currentID -ne 0) {
+		Write-Error -Category PermissionDenied -ErrorId "ERR_NOT_ROOT" -Message "This script must be run as root. Please run it with 'sudo'."
+		exit 13
+	}
+	Write-Host "Updating Vincent OS System..."
+
+	# Update core system
+	pacman -Syu
+
+	# Update AUR packages if yay is installed
+	try {
+		if (Get-Command yay) {
+			yay -Syu
+		}
+	}
+	catch {
+		Write-Warning "'yay' is not installed. Skipping AUR packages update."
+	}
+
+	# Update user software
+	flatpak update
+
+	# Update Core LivePatch database and apply newest patches
+	clpctl update
 }
 catch {
-    Write-Warning "'yay' is not installed. Skipping AUR packages update."
+	Write-Error -Category NotSpecified -ErrorId "ERR_UPDATE_FAILED" -Message "An error occurred while updating the system: $_"
 }
-
-# Update user software
-flatpak update
-
-# Update Core LivePatch database and apply newest patches
-sudo clpctl update

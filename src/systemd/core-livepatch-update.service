@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/clpctl Update
+ExecStart=/usr/bin/clpctl update
 User=root
 
 [Install]

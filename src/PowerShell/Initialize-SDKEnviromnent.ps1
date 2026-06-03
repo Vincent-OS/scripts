@@ -23,7 +23,6 @@
 param (
     [switch]$Development
 )
-$sdkDir = "/src/SDK"
 $repos = @(
     @{
         Name = "calamares"
@@ -41,6 +40,16 @@ $repos = @(
         Branch = if ($Development) { "dev" } else { "master" }
     },
     @{
+        Name = "global-theme"
+        Url = "https://github.com/Vincent-OS/global-theme.git"
+        Branch = if ($Development) { "dev" } else { "master" }
+    },
+    @{
+        Name = "iso"
+        Url = "https://github.com/Vincent-OS/iso.git"
+        Branch = if ($Development) { "dev" } else { "master" }
+    },
+    @{
         Name = "scripts"
         Url = "https://github.com/Vincent-OS/scripts.git"
         Branch = if ($Development) { "dev" } else { "master" }
@@ -51,20 +60,15 @@ $repos = @(
         Branch = if ($Development) { "dev" } else { "master" }
     },
     @{
-        Name = "global-theme"
-        Url = "https://github.com/Vincent-OS/global-theme.git"
-        Branch = if ($Development) { "dev" } else { "master" }
-    },
-    @{
         Name = "wallpaper"
         Url = "https://github.com/Vincent-OS/wallpaper.git"
         Branch = if ($Development) { "dev" } else { "master" }
     }
 )
-$requiredTools = @("git", "dotnet", "pwsh")
+$requiredTools = @("git", "dotnet", "pwsh", "mkarchiso")
 
-Start-Transcript -Path "$env:HOME/Initialize-SDKEnvironment.log" -Append
-Write-Host "Vincent OS SDK 1.0 (origin). By v38armageddon"
+Start-Transcript -Path "$env:HOME/Initialize-SDKEnvironment.log"
+Write-Host "Vincent OS SDK 1.2 (origin). By v38armageddon"
 
 # Check for required tools
 foreach ($tool in $requiredTools) {
@@ -73,6 +77,10 @@ foreach ($tool in $requiredTools) {
         Stop-Transcript
         exit 255
     }
+}
+$sdkDir = Read-Host "Enter the path where you want to set up the SDK environment (default: /src/SDK)"
+if ([string]::IsNullOrWhiteSpace($sdkDir)) {
+    $sdkDir = "/src/SDK"
 }
 
 Write-Host "Initializing SDK environment in $sdkDir"
