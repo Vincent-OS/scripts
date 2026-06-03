@@ -1,9 +1,47 @@
+<#PSScriptInfo
+
+.VERSION 1.2.0
+
+.GUID 09b49d46-a658-4beb-b621-dc67979d8f1d
+
+.AUTHOR v38armageddon
+
+.COMPANYNAME v38armageddon
+
+.COPYRIGHT
+
+.TAGS
+
+.LICENSEURI https://interoperable-europe.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+.PROJECTURI https://github.com/Vincent-OS/scripts
+
+.ICONURI
+
+.EXTERNALMODULEDEPENDENCIES
+
+.REQUIREDSCRIPTS
+
+.EXTERNALSCRIPTDEPENDENCIES
+
+.RELEASENOTES
+Initial release.
+
+.PRIVATEDATA
+
+.DESCRIPTION
+ Initializes the Vincent OS SDK environment by cloning all required repositories.
+
+#>
+Param(
+	[switch]$Development
+)
 <#
     .SYNOPSIS
     Initialize the Vincent OS SDK environment.
 
     .DESCRIPTION
-    This scripts sets up a Vincent OS SDK environment located in /src/SDK, it will download the following repositories:
+    This script sets up a Vincent OS SDK environment located in /src/SDK, it will download the following repositories:
     - Vincent OS Calamares settings (Vincent-OS/calamares-settings)
     - Vincent OS Core LivePatch CLI (Vincent-OS/clpctl)
     - Vincent OS Scripts (Vincent-OS/scripts)
@@ -20,15 +58,12 @@
     - .NET SDK 8.0 or higher
     - PowerShell 7.2 or higher
 #>
-param (
-    [switch]$Development
-)
 $repos = @(
     @{
         Name = "calamares"
         Url = "https://codeberg.org/Calamares/calamares.git"
         Branch = if ($Development) { "calamares" } else { "calamares" }
-    }, 
+    },
     @{
         Name = "calamares-settings"
         Url = "https://github.com/Vincent-OS/calamares-settings.git"

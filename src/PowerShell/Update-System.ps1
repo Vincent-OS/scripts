@@ -1,3 +1,39 @@
+<#PSScriptInfo
+
+.VERSION 1.0
+
+.GUID f94c1103-ca75-4a86-b358-26e77e454b51
+
+.AUTHOR v38armageddon
+
+.COMPANYNAME
+
+.COPYRIGHT
+
+.TAGS
+
+.LICENSEURI https://interoperable-europe.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+.PROJECTURI https://github.com/Vincent-OS/scripts
+
+.ICONURI
+
+.EXTERNALMODULEDEPENDENCIES 
+
+.REQUIREDSCRIPTS
+
+.EXTERNALSCRIPTDEPENDENCIES
+
+.RELEASENOTES
+
+
+.PRIVATEDATA
+
+.DESCRIPTION
+ Script that updates the Vincent OS system.
+
+#>
+Param()
 <#
     .SYNOPSIS
     This script will update the Vincent OS system.
@@ -13,6 +49,7 @@
     Update-System.ps1
 #>
 $currentID = & id -u 2>$null
+$loggedInUser = & logname 2>$null
 try {
 	if ($currentID -ne 0) {
 		Write-Error -Category PermissionDenied -ErrorId "ERR_NOT_ROOT" -Message "This script must be run as root. Please run it with 'sudo'."
@@ -26,7 +63,7 @@ try {
 	# Update AUR packages if yay is installed
 	try {
 		if (Get-Command yay) {
-			yay -Syu
+			sudo -u $loggedInUser yay -Syu
 		}
 	}
 	catch {
@@ -34,7 +71,7 @@ try {
 	}
 
 	# Update user software
-	flatpak update
+	sudo -u $loggedInUser flatpak update
 
 	# Update Core LivePatch database and apply newest patches
 	clpctl update
