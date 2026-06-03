@@ -1,9 +1,47 @@
+<#PSScriptInfo
+
+.VERSION 1.2.0
+
+.GUID 09b49d46-a658-4beb-b621-dc67979d8f1d
+
+.AUTHOR v38armageddon
+
+.COMPANYNAME v38armageddon
+
+.COPYRIGHT
+
+.TAGS
+
+.LICENSEURI https://interoperable-europe.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+.PROJECTURI https://github.com/Vincent-OS/scripts
+
+.ICONURI
+
+.EXTERNALMODULEDEPENDENCIES
+
+.REQUIREDSCRIPTS
+
+.EXTERNALSCRIPTDEPENDENCIES
+
+.RELEASENOTES
+Initial release.
+
+.PRIVATEDATA
+
+.DESCRIPTION
+ Initializes the Vincent OS SDK environment by cloning all required repositories.
+
+#>
+Param(
+	[switch]$Development
+)
 <#
     .SYNOPSIS
     Initialize the Vincent OS SDK environment.
 
     .DESCRIPTION
-    This scripts sets up a Vincent OS SDK environment located in /src/SDK, it will download the following repositories:
+    This script sets up a Vincent OS SDK environment located in /src/SDK, it will download the following repositories:
     - Vincent OS Calamares settings (Vincent-OS/calamares-settings)
     - Vincent OS Core LivePatch CLI (Vincent-OS/clpctl)
     - Vincent OS Scripts (Vincent-OS/scripts)
@@ -20,16 +58,12 @@
     - .NET SDK 8.0 or higher
     - PowerShell 7.2 or higher
 #>
-param (
-    [switch]$Development
-)
-$sdkDir = "/src/SDK"
 $repos = @(
     @{
         Name = "calamares"
         Url = "https://codeberg.org/Calamares/calamares.git"
         Branch = if ($Development) { "calamares" } else { "calamares" }
-    }, 
+    },
     @{
         Name = "calamares-settings"
         Url = "https://github.com/Vincent-OS/calamares-settings.git"
@@ -38,6 +72,16 @@ $repos = @(
     @{
         Name = "clpctl"
         Url = "https://github.com/Vincent-OS/clpctl.git"
+        Branch = if ($Development) { "dev" } else { "master" }
+    },
+    @{
+        Name = "global-theme"
+        Url = "https://github.com/Vincent-OS/global-theme.git"
+        Branch = if ($Development) { "dev" } else { "master" }
+    },
+    @{
+        Name = "iso"
+        Url = "https://github.com/Vincent-OS/iso.git"
         Branch = if ($Development) { "dev" } else { "master" }
     },
     @{
@@ -51,20 +95,15 @@ $repos = @(
         Branch = if ($Development) { "dev" } else { "master" }
     },
     @{
-        Name = "global-theme"
-        Url = "https://github.com/Vincent-OS/global-theme.git"
-        Branch = if ($Development) { "dev" } else { "master" }
-    },
-    @{
         Name = "wallpaper"
         Url = "https://github.com/Vincent-OS/wallpaper.git"
         Branch = if ($Development) { "dev" } else { "master" }
     }
 )
-$requiredTools = @("git", "dotnet", "pwsh")
+$requiredTools = @("git", "dotnet", "pwsh", "mkarchiso")
 
-Start-Transcript -Path "$env:HOME/Initialize-SDKEnvironment.log" -Append
-Write-Host "Vincent OS SDK 1.0 (origin). By v38armageddon"
+Start-Transcript -Path "$env:HOME/Initialize-SDKEnvironment.log"
+Write-Host "Vincent OS SDK 1.2 (origin). By v38armageddon"
 
 # Check for required tools
 foreach ($tool in $requiredTools) {
@@ -73,6 +112,10 @@ foreach ($tool in $requiredTools) {
         Stop-Transcript
         exit 255
     }
+}
+$sdkDir = Read-Host "Enter the path where you want to set up the SDK environment (default: /src/SDK)"
+if ([string]::IsNullOrWhiteSpace($sdkDir)) {
+    $sdkDir = "/src/SDK"
 }
 
 Write-Host "Initializing SDK environment in $sdkDir"
